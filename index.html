@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>retro-counter — a 90s hit counter for static sites</title>
+  <meta name="description" content="A tiny, dependency-free visit counter for static sites. No server, no third-party service, no tracking." />
+  <style>
+    :root { --ink: #2c2420; --soft: #6a5f57; --line: #e7e2da; --paper: #fbf8f4; }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0 auto; max-width: 720px; padding: 0 24px 80px;
+      font: 17px/1.65 ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+      color: var(--ink); background: #fff;
+    }
+    header { padding: 64px 0 8px; }
+    h1 { font-size: 2.6rem; margin: 0 0 6px; letter-spacing: -0.02em; }
+    h2 { font-size: 1.25rem; margin: 44px 0 12px; }
+    .tag { color: var(--soft); margin: 0 0 28px; font-size: 1.1rem; }
+    .live {
+      display: flex; align-items: center; justify-content: space-between; gap: 16px;
+      flex-wrap: wrap; padding: 22px; border: 2px solid var(--line);
+      border-radius: 14px; background: var(--paper);
+    }
+    .live p { margin: 0; color: var(--soft); font-size: 0.92rem; }
+    pre {
+      background: #1c1c1c; color: #e8e6e1; padding: 16px 18px; border-radius: 10px;
+      overflow-x: auto; font: 13.5px/1.6 "Courier New", Courier, monospace;
+    }
+    code { font-family: "Courier New", Courier, monospace; }
+    p code, li code { background: var(--paper); border: 1px solid var(--line); padding: 1px 5px; border-radius: 4px; font-size: 0.9em; }
+    table { border-collapse: collapse; width: 100%; font-size: 0.92rem; }
+    th, td { text-align: left; padding: 9px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+    th { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--soft); }
+    .themes { display: flex; flex-wrap: wrap; gap: 22px; padding: 22px; border: 2px solid var(--line); border-radius: 14px; }
+    .themes > div { display: grid; gap: 8px; justify-items: center; }
+    .themes span.name { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--soft); }
+    .note { border-left: 4px solid #ffb000; background: #fffaf0; padding: 14px 18px; border-radius: 0 8px 8px 0; }
+    .note strong { display: block; margin-bottom: 4px; }
+    a { color: #d6296b; }
+    button {
+      font: inherit; font-size: 0.85rem; font-weight: 700; cursor: pointer;
+      background: #fff; border: 2px solid var(--ink); color: var(--ink);
+      padding: 6px 14px; border-radius: 999px;
+    }
+    button:hover { background: var(--ink); color: #fff; }
+    footer { margin-top: 60px; padding-top: 24px; border-top: 1px solid var(--line); color: var(--soft); font-size: 0.88rem; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>retro-counter</h1>
+    <p class="tag">A little 90s hit counter for static sites. One file, no dependencies, no server, no third-party service, no tracking.</p>
+  </header>
+
+  <div class="live">
+    <div data-retro-counter data-key="demo" data-label="Your visit"></div>
+    <p>← this is real. Close the tab, come back, and it ticks up.</p>
+    <button type="button" id="reset">Reset</button>
+  </div>
+
+  <div class="note" style="margin-top: 22px;">
+    <strong>Read this part before you use it.</strong>
+    The count lives in <em>each visitor's own browser</em>, so it is not a
+    site-wide total. Every visitor counts only their own visits, and a
+    first-time visitor always sees <code>000001</code>. It's a personal hello,
+    not a stat. That's why the default label reads "Your visit" rather than the
+    period-accurate "You are visitor number" — that phrasing would be a lie.
+    If you need a true shared tally you need a server or a hosted counter
+    service, and this isn't that.
+  </div>
+
+  <h2>Install</h2>
+  <p>Download <a href="retro-counter.js"><code>retro-counter.js</code></a> and drop it in your site. Then:</p>
+  <pre><code>&lt;div data-retro-counter&gt;&lt;/div&gt;
+&lt;script src="retro-counter.js"&gt;&lt;/script&gt;</code></pre>
+  <p>That's the whole thing. The styles come with it — there's no CSS file to add.</p>
+
+  <h2>Options</h2>
+  <p>All optional, all set with data attributes:</p>
+  <pre><code>&lt;div data-retro-counter
+     data-label="Your visit"
+     data-digits="6"
+     data-theme="lcd"
+     data-key="my-site"
+     data-count-per="session"&gt;&lt;/div&gt;</code></pre>
+  <table>
+    <tr><th>Attribute</th><th>Default</th><th>What it does</th></tr>
+    <tr><td><code>data-label</code></td><td><code>Your visit</code></td><td>Text before the digits. Set to <code>""</code> for digits only.</td></tr>
+    <tr><td><code>data-digits</code></td><td><code>6</code></td><td>How many digits. The number caps at the largest that fits.</td></tr>
+    <tr><td><code>data-theme</code></td><td><code>lcd</code></td><td><code>lcd</code>, <code>amber</code>, <code>cyan</code>, or <code>paper</code>.</td></tr>
+    <tr><td><code>data-key</code></td><td><code>retro-counter</code></td><td>localStorage key. Change it if you run two separate counters.</td></tr>
+    <tr><td><code>data-count-per</code></td><td><code>session</code></td><td><code>session</code>, <code>pageview</code>, or <code>day</code>.</td></tr>
+  </table>
+
+  <h2>Themes</h2>
+  <div class="themes">
+    <div><div data-retro-counter data-key="demo" data-label=""></div><span class="name">lcd</span></div>
+    <div><div data-retro-counter data-key="demo" data-label="" data-theme="amber"></div><span class="name">amber</span></div>
+    <div><div data-retro-counter data-key="demo" data-label="" data-theme="cyan"></div><span class="name">cyan</span></div>
+    <div><div data-retro-counter data-key="demo" data-label="" data-theme="paper"></div><span class="name">paper</span></div>
+  </div>
+  <p style="color: var(--soft); font-size: 0.9rem;">
+    They all share <code>data-key="demo"</code>, so they show the same number and
+    the visit is only counted once.
+  </p>
+
+  <h2>Making it yours</h2>
+  <p>Override the CSS custom properties — no need to touch the file:</p>
+  <pre><code>.rc {
+  --rc-box:   #2c2420;  /* the odometer housing */
+  --rc-digit: #9fc131;  /* digit color         */
+  --rc-glow:  rgba(159, 193, 49, .75);
+  --rc-label: #6a5f57;
+}</code></pre>
+
+  <h2>Counting rules</h2>
+  <ul>
+    <li><code>session</code> (default) — one count per browsing session, so clicking around your site doesn't run it up.</li>
+    <li><code>pageview</code> — every page load.</li>
+    <li><code>day</code> — at most one count per calendar day.</li>
+  </ul>
+  <p>
+    If storage is blocked (some private modes, or cookies off) the counter
+    hides itself rather than showing a fake or stuck number.
+  </p>
+
+  <footer>
+    MIT licensed · by <a href="https://www.rachelkaur.com">Rachel Kaur</a> ·
+    <a href="https://github.com/rachelkaur/retro-counter">source on GitHub</a>
+  </footer>
+
+  <script src="retro-counter.js"></script>
+  <script>
+    document.getElementById("reset").addEventListener("click", function () {
+      RetroCounter.reset("demo");
+      location.reload();
+    });
+  </script>
+</body>
+</html>
