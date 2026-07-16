@@ -3,7 +3,7 @@
 A little 90s hit counter for static sites. One file, no dependencies, no
 build step, no server, no third-party service, no tracking.
 
-**[Live demo →](https://rachelkaur.github.io/retro-counter/)**
+**[Live demo →](https://www.rachelkaur.com/retro-counter/)**
 
 ```html
 <div data-retro-counter></div>
